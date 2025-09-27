@@ -1,25 +1,5 @@
 import { Schema, model } from 'mongoose'
-import type { CryptoAsset } from '../../payment/types/payment'
-
-export interface IGift {
-  name: string
-  description: string
-  image: string
-  prices: {
-    [key in CryptoAsset]: number
-  }
-  isAvailable: boolean
-  availableQuantity: number
-  soldCount: number
-  status: 'available' | 'purchased' | 'gifted'
-  rarity: string
-  category: string
-  owner?: Schema.Types.ObjectId
-  recipient?: Schema.Types.ObjectId
-  bgColor: string
-  createdAt: Date
-  updatedAt: Date
-}
+import type { IGift } from '../../../modules/gifts/types/gift'
 
 const giftSchema = new Schema<IGift>({
   name: { type: String, required: true },
@@ -48,4 +28,5 @@ const giftSchema = new Schema<IGift>({
   timestamps: true
 })
 
-export const Gift = model<IGift>('Gift', giftSchema) 
+export const Gift = model<IGift>('Gift', giftSchema)
+export type { IGift }

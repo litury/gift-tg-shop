@@ -1,18 +1,27 @@
 import type { Types } from 'mongoose'
+import type { CryptoAsset } from '../../payment/types/payment'
 
 export interface IGift {
-  id: string
+  _id?: Types.ObjectId
+  id?: string
   name: string
   description: string
-  price: number
-  imageUrl?: string
+  image: string
+  prices: {
+    [key in CryptoAsset]: number
+  }
+  price?: number // legacy compatibility
+  imageUrl?: string // legacy compatibility  
   category: string
-  rarity: 'common' | 'rare' | 'epic' | 'legendary'
+  rarity: string
   isAvailable: boolean
-  quantity: number
+  quantity?: number // legacy compatibility
+  availableQuantity: number
   soldCount: number
+  status: 'available' | 'purchased' | 'gifted'
+  owner?: Types.ObjectId
+  recipient?: Types.ObjectId
   bgColor: string
-  availableQuantity?: number
   createdAt: Date
   updatedAt: Date
 }
