@@ -109,10 +109,18 @@ class TelegramService {
 
   get initData(): string {
     if (!this.p_webApp) {
-      console.warn('Telegram WebApp не инициализирован')
+      console.warn('Телеграм WebApp не инициализирован')
       return ''
     }
-    return this.p_webApp.initData || ''
+    const initData = this.p_webApp.initData || ''
+    console.log('initData:', {
+      hasWebApp: !!this.p_webApp,
+      hasInitData: !!initData,
+      initDataLength: initData.length,
+      user: this.p_webApp.initDataUnsafe?.user,
+      isExpanded: this.p_webApp.isExpanded
+    })
+    return initData
   }
 
   get user(): Telegram.WebAppUser | undefined {

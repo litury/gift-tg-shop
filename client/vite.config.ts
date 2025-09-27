@@ -15,7 +15,13 @@ export default defineConfig({
     port: 3000,
     watch: {
       usePolling: true
-    }
+    },
+    allowedHosts: [
+      'localhost',
+      '127.0.0.1',
+      'local-tuna-client.ru.tuna.am',
+      '.ru.tuna.am'
+    ]
   },
   resolve: {
     alias: {
