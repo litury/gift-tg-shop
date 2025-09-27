@@ -16,10 +16,9 @@ export class WebhookController {
       if (update.message?.text === '/start') {
         const chatId = update.message.chat?.id
         if (chatId) {
-          await this.p_telegramService.sendMessageAsync(
-            chatId,
-            'Добро пожаловать в Gift Shop Bot!'
-          )
+          await this.p_telegramService.sendMessage(chatId, {
+            text: 'Добро пожаловать в Gift Shop Bot!'
+          })
         }
       }
       

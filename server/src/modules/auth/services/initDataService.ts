@@ -1,4 +1,4 @@
-import { validate, sign, isValid } from '@telegram-apps/init-data-node'
+import { validate, sign, isValid } from '@tma.js/init-data-node'
 import type { IInitDataPayload } from '../types/auth'
 
 export class InitDataService {
@@ -30,13 +30,13 @@ export class InitDataService {
     const signData = {
       user: _payload.user ? {
         id: _payload.user.id,
-        firstName: _payload.user.first_name,
-        lastName: _payload.user.last_name,
+        first_name: _payload.user.first_name,
+        last_name: _payload.user.last_name,
         username: _payload.user.username,
-        languageCode: _payload.user.language_code
+        language_code: _payload.user.language_code
       } : undefined,
-      chatInstance: _payload.chat_instance,
-      startParam: _payload.start_param
+      chat_instance: _payload.chat_instance,
+      start_param: _payload.start_param
     }
 
     return sign(signData, this.p_botToken, new Date())

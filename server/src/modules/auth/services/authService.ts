@@ -1,4 +1,4 @@
-import { validate } from '@telegram-apps/init-data-node'
+import { validate } from '@tma.js/init-data-node'
 import jwt from 'jsonwebtoken'
 import type { IAuthUser, IAuthResponse } from '../types/auth'
 import { UserRepository } from '../../database/repositories/userRepository'

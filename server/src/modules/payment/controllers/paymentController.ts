@@ -59,7 +59,7 @@ export class PaymentController {
         payload: JSON.stringify({ giftId, userId }),
         paid_btn_name: 'viewItem',
         paid_btn_url: `${process.env.WEBAPP_URL}/gifts/${giftId}`
-      } as CreateInvoiceParams)
+      })
 
       this.p_logger.logInfo('Создан инвойс для покупки подарка', { 
         userId,
@@ -84,7 +84,46 @@ export class PaymentController {
     }
   }
 
+  public async checkPaymentAsync(req: Request, res: Response) {
+    try {
+      const { invoiceId } = req.params
+      
+      if (!invoiceId) {
+        return res.status(400).json({ error: 'Invoice ID is required' })
+      }
 
+      // Здесь можно добавить логику проверки статуса платежа
+      // через Crypto Pay API или базу данных
+      
+      res.json({
+        success: true,
+        status: 'checking'
+      })
+    } catch (error) {
+      this.p_logger.logError('Ошибка проверки платежа:', error)
+      res.status(500).json({ error: 'Ошибка проверки платежа' })
+    }
+  }
 
+  public async handleWebhookAsync(req: Request, res: Response) {
+    try {
+      const signature = req.headers['crypto-pay-api-signature'] as string
+      
+      if (!signature) {
+        return res.status(400).json({ error: 'Missing signature' })
+      }
 
-} 
+      if (!this.validateWebhookSignature(req.body, signature)) {
+        return res.status(401).json({ error: 'Invalid signature' })
+      }
+
+      // Обработка webhook данных
+      this.p_logger.logInfo('Получен webhook от Crypto Pay', req.body)
+      
+      res.json({ success: true })
+    } catch (error) {
+      this.p_logger.logError('Ошибка обработки webhook:', error)
+      res.status(500).json({ error: 'Ошибка обработки webhook' })
+    }
+  }
+}

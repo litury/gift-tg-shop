@@ -51,7 +51,7 @@ class CryptoPayService {
         asset: params.asset,
         description: params.description,
         payload: params.payload,
-        paid_btn_name: params.paid_btn_name as const,
+        paid_btn_name: params.paid_btn_name,
         paid_btn_url: params.paid_btn_url,
         allow_comments: false,
         allow_anonymous: false,
