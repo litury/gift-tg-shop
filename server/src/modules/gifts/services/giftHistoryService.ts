@@ -3,7 +3,7 @@ import { User } from '../../database/models/User'
 import { LoggerService } from '../../core/services/loggerService'
 
 interface IHistoryResponse {
-  action: 'purchase' | 'send'
+  action: 'purchase' | 'send' | 'receive'
   timestamp: Date
   user: {
     id: number

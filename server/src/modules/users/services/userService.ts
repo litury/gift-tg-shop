@@ -1,9 +1,10 @@
 import { TelegramService } from './telegramService'
 import { LoggerService } from '../../core/services/loggerService'
 import type { IUserAvatar, IUserResponse } from '../types/user'
+import type { IUserProfile } from '../types/user'
 import { User } from '../../database/models'
 import { UserGift } from '../../database/models'
-import type { IUserGift } from '@/modules/gifts/types/userGift'
+import type { IUserGift } from '../../gifts/types/userGift'
 
 export class UserService {
   private readonly p_telegramService: TelegramService
@@ -97,7 +98,7 @@ export class UserService {
 
   public async getUserProfileWithGiftsAsync(_userId: number): Promise<{
     profile: IUserProfile,
-    gifts: IUserGift[]
+    gifts: any[]
   }> {
     try {
       // Получаем профиль пользователя
@@ -134,7 +135,7 @@ export class UserService {
             _id: gift._id.toString(),
             gift: {
               ...gift.giftId,
-              _id: gift.giftId._id.toString()
+              _id: (gift.giftId as any)._id.toString()
             }
           }))
         },
@@ -143,7 +144,7 @@ export class UserService {
           _id: gift._id.toString(),
           gift: {
             ...gift.giftId,
-            _id: gift.giftId._id.toString()
+            _id: (gift.giftId as any)._id.toString()
           }
         }))
       }
@@ -153,7 +154,7 @@ export class UserService {
     }
   }
 
-  public async getUserGiftsHistoryAsync(_userId: number): Promise<IUserGift[]> {
+  public async getUserGiftsHistoryAsync(_userId: number): Promise<any[]> {
     try {
       const gifts = await UserGift.find({
         $or: [
@@ -175,7 +176,7 @@ export class UserService {
         _id: gift._id.toString(),
         gift: {
           ...gift.giftId,
-          _id: gift.giftId._id.toString()
+          _id: (gift.giftId as any)._id.toString()
         }
       }))
     } catch (error) {
@@ -200,10 +201,10 @@ export class UserService {
       return userGifts
         .filter(ug => ug.giftId) // Фильтруем записи с отсутствующими подарками
         .map(userGift => ({
-          _id: userGift.giftId._id,
-          name: userGift.giftId.name,
-          description: userGift.giftId.description,
-          image: userGift.giftId.image,
+          _id: (userGift.giftId as any)._id,
+          name: (userGift.giftId as any).name,
+          description: (userGift.giftId as any).description,
+          image: (userGift.giftId as any).image,
           purchaseDate: userGift.purchaseDate,
           status: userGift.status
         }))

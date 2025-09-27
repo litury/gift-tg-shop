@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction, RequestHandler } from 'express
 import { GiftController } from '../controllers/giftController'
 import { inlineAuthMiddleware } from '../../auth/middleware/inlineAuthMiddleware'
 import { authMiddleware } from '../../auth/middleware/authMiddleware'
-import { Gift } from '../models/gift'
+import { Gift } from '../../database/models/Gift'
 
 const router = Router()
 const controller = new GiftController()
