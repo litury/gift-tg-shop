@@ -1,77 +1,171 @@
 # Telegram Gift Shop
 
-Telegram Mini App для покупки и отправки виртуальных подарков через Crypto Pay.
+Telegram Web App для покупки и отправки криптовалютных подарков.
 
-## 🌟 Особенности
+## Архитектура
 
-- Покупка и отправка виртуальных подарков через Crypto Pay
-- Интеграция с Telegram Mini App
-- Поддержка светлой и темной темы
-- Мультиязычность (RU/EN)
-- Лидерборд пользователей
-- Профили с историей подарков
+Проект состоит из трех основных компонентов:
 
-## 🏗 Структура проекта
+- **Bot** - Telegram бот (Grammy.js)
+- **Client** - Vue.js PWA Web App
+- **Server** - Express.js API
+- **Databases** - MongoDB и Redis
+
+## Структура проекта
 
 ```
-├── client/           # Vue.js клиентское приложение
-├── server/           # Node.js + Express бэкенд
-└── bot/             # Telegram бот на Grammy
+gift-tg-shop/
+├── bot/              # Telegram Bot (Grammy.js)
+├── client/           # Web App (Vue.js + Vite)
+├── server/           # API Server (Express + TypeScript)
+├── docker-compose.yaml         # Production
+├── docker-compose.dev.yaml     # Development
+└── .env.example      # Пример переменных окружения
 ```
 
-## 🚀 Быстрый старт
+## Предварительные требования
 
-1. Клонируйте репозиторий:
+- Node.js 18+
+- Docker и Docker Compose
+- TUNA CLI (для туннелей в разработке)
+
+## Локальный запуск
+
+### Шаг 1: Настройка переменных окружения
+
+1. Скопируйте `.env.example` в `.env` в корне проекта:
 ```bash
-git clone https://github.com/username/telegram-gift-shop.git
+cp .env.example .env
 ```
 
-2. Установите зависимости для каждого модуля:
+2. Заполните обязательные переменные в `.env`:
 ```bash
-# Клиент
-cd client && npm install
+# Токены
+BOT_TOKEN=your_bot_token
+CRYPTO_PAY_API_TOKEN=your_crypto_pay_token
+TUNA_TOKEN=your_tuna_token
 
-# Сервер
-cd server && npm install
+# Базы данных
+MONGODB_URI=mongodb://root:640436123qwe@localhost:27017/giftshop?authSource=admin
+MONGO_ROOT_USERNAME=root
+MONGO_ROOT_PASSWORD=640436123qwe
+REDIS_PASSWORD=1234568
 
-# Бот
-cd bot && npm install
+# JWT
+JWT_SECRET=your-jwt-secret
+
+# Поддержка
+SUPPORT_CHAT_ID=your_telegram_chat_id
 ```
 
-3. Создайте файлы .env в каждой директории на основе .env.example
+### Шаг 2: Запуск баз данных
 
-4. Запустите приложение:
+В терминале 1:
 ```bash
-# Клиент (порт 3000)
-cd client && npm run dev
-
-# Сервер (порт 4000)
-cd server && npm run dev
-
-# Бот
-cd bot && npm run dev
+docker compose -f docker-compose.dev.yaml up mongodb redis
 ```
 
-## 📦 Технологии
+### Шаг 3: Запуск API сервера
 
-### Клиент
+В терминале 2:
+```bash
+cd server
+npm install
+npm run dev
+```
+
+### Шаг 4: Запуск клиента
+
+В терминале 3:
+```bash
+cd client
+npm install
+npm run dev
+```
+Клиент автоматически найдет свободный порт (обычно 3000, 3001 или 3002).
+
+### Шаг 5: Настройка туннелей (для Telegram бота)
+
+В терминале 4 (туннель для сервера):
+```bash
+TUNA_TOKEN=your_tuna_token tuna http localhost:4000 --subdomain=local-tuna-server
+```
+
+В терминале 5 (туннель для клиента):
+```bash
+TUNA_TOKEN=your_tuna_token tuna http localhost:XXXX --subdomain=local-tuna-client
+```
+Где `XXXX` - порт, на котором запустился клиент.
+
+### Шаг 6: Обновление переменных окружения
+
+Обновите `.env` с URL туннелей:
+```bash
+WEBAPP_URL=https://local-tuna-client.ru.tuna.am
+SERVER_URL=https://local-tuna-server.ru.tuna.am
+VITE_API_URL=https://local-tuna-server.ru.tuna.am
+WEBHOOK_DOMAIN=https://local-tuna-server.ru.tuna.am
+```
+
+### Шаг 7: Запуск бота
+
+В терминале 6:
+```bash
+cd bot
+npm install
+npm run dev
+```
+
+## Тестирование
+
+1. Найдите вашего бота в Telegram
+2. Отправьте команду `/start`
+3. Нажмите кнопку "Open Gift Shop"
+4. Web App должно открыться внутри Telegram
+
+## Режим разработки
+
+Для удобства разработки рекомендуется использовать локальный режим:
+
+- Базы данных в Docker
+- Приложения запущены локально с hot reload
+- TUNA туннели для доступа из Telegram
+
+## Технологии
+
+### Клиент (Vue.js Web App)
 - Vue 3 + TypeScript
 - Tailwind CSS + DaisyUI
-- Vue Router
-- Pinia
+- Vue Router + Pinia
+- Vite
 - Telegram Web App SDK
 
-### Сервер
+### Сервер (Express.js API)
 - Node.js + TypeScript
-- Express
-- MongoDB
-- JWT
+- Express.js
+- MongoDB + Mongoose
+- Redis + IORedis
+- JWT Authentication
+- Socket.IO
 - Crypto Pay API
 
-### Бот
-- Grammy
+### Бот (Telegram Bot)
+- Grammy.js
 - Node.js + TypeScript
+- Polling режим (для разработки)
 
-## 📝 Лицензия
+### Инфраструктура
+- Docker + Docker Compose
+- TUNA туннели (для разработки)
+- MongoDB + Redis в контейнерах
 
-MIT 
+## Production Deployment
+
+Для продакшн развертывания:
+```bash
+docker compose -f docker-compose.yaml up -d
+```
+
+## Лицензия
+
+MIT
