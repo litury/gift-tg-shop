@@ -10,9 +10,17 @@ export const telegramAuthMiddleware = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    logger.logInfo('Проверка аутентификации:', { 
+      headers: Object.keys(req.headers),
+      hasInitData: !!req.headers['telegram-web-app-init-data'],
+      userAgent: req.headers['user-agent']
+    })
+    
     const initData = req.headers['telegram-web-app-init-data'] as string
     if (!initData) {
-      logger.logWarning('Отсутствуют данные инициализации')
+      logger.logWarning('Отсутствуют данные инициализации', {
+        allHeaders: req.headers
+      })
       res.status(401).json({ error: 'Отсутствуют данные инициализации' })
       return
     }
